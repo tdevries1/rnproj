@@ -17,7 +17,7 @@ where β solves an ordinary weighted least-squares problem on a state grid.
 
 **Why use it instead of Carr-Madan?**
 
-- **Automatically computes**: implied moments (BKM),
+- **Automatically computes**: implied moments,
   VIX/SVIX-style indices, implied distributions.
 - **Markedly more accurate with sparse or truncated strikes**, where the
   discretized CM formula worsens (order-of-magnitude smaller errors
