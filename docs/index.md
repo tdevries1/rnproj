@@ -2,8 +2,9 @@
 
 **Risk-neutral expectations from option prices by least-squares projection.**
 
-`rnproj` implements the projection estimator of De Vries (2026), *A
-Projection Approach for Estimating Risk-Neutral Expectations*. It is a
+`rnproj` implements the projection estimator of [De Vries (2026),
+*Recovering Risk-Neutral Moments from Options*](https://arxiv.org/abs/2601.14852).
+It is a
 drop-in replacement for hand-rolled Carr-Madan code (implied moments,
 VIX/SVIX, implied distributions), markedly more accurate on sparse strike
 chains, and the only available estimator of bivariate risk-neutral FX

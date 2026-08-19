@@ -14,11 +14,14 @@ license: MIT
 version: 0.1.0
 date-released: "2026-08-19"
 preferred-citation:
-  type: unpublished
-  title: "A Projection Approach for Estimating Risk-Neutral Expectations"
+  type: article
+  title: "Recovering Risk-Neutral Moments from Options"
   year: 2026
   authors:
     - family-names: "De Vries"
       given-names: "Tjeerd"
       affiliation: "HEC Paris"
-  notes: "Working paper, HEC Paris"
+  url: "https://arxiv.org/abs/2601.14852"
+  identifiers:
+    - type: other
+      value: "arXiv:2601.14852"
