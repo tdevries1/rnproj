@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite both the software and the paper it
+  implements (see preferred-citation).
+title: "rnproj: risk-neutral expectations from option prices by projection"
+type: software
+authors:
+  - family-names: "De Vries"
+    given-names: "Tjeerd"
+    affiliation: "HEC Paris"
+    email: "de-vries@hec.fr"
+repository-code: "https://github.com/tjeerddevries/rnproj"
+license: MIT
+version: 0.1.0
+date-released: "2026-08-19"
+preferred-citation:
+  type: unpublished
+  title: "A Projection Approach for Estimating Risk-Neutral Expectations"
+  year: 2026
+  authors:
+    - family-names: "De Vries"
+      given-names: "Tjeerd"
+      affiliation: "HEC Paris"
+  notes: "Working paper, HEC Paris"

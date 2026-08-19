@@ -1,0 +1,46 @@
+site_name: rnproj
+site_description: Risk-neutral expectations from option prices by least-squares projection
+repo_url: https://github.com/tjeerddevries/rnproj
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: light mode
+  features:
+    - content.code.copy
+    - navigation.sections
+
+nav:
+  - Home: index.md
+  - Theory in five minutes: theory.md
+  - Choosing the weighting density: weighting.md
+  - FX dependence: fx.md
+  - Migrating from Carr-Madan code: migrating.md
+  - API reference: api.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+extra_javascript:
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            show_source: false
