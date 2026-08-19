@@ -30,10 +30,11 @@ from typing import Any
 import numpy as np
 
 from ._linalg import wls, wls_nonnegative
-
-_trapezoid = getattr(np, "trapezoid", None) or np.trapz  # numpy < 2 compatibility
 from .chain import OptionChain
 from .grids import default_grid, validate_grid
+
+# numpy < 2 compatibility (np.trapz was renamed to np.trapezoid)
+_trapezoid = getattr(np, "trapezoid", getattr(np, "trapz", None))
 
 __all__ = ["project", "Projection", "BidAsk"]
 
