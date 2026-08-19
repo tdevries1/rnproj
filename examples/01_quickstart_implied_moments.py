@@ -13,8 +13,8 @@
 # chain by **projection**: the target payoff is regressed onto the span of
 # the observed option payoffs $\{1, S_T, (K-S_T)^+, (S_T-K)^+\}$, and the
 # fitted combination is priced with the observed option prices. This is the
-# estimator of De Vries (2026), *A Projection Approach for Estimating
-# Risk-Neutral Expectations*, and it is a drop-in replacement for
+# estimator of De Vries (2026), *Recovering Risk-Neutral Moments from
+# Options* (arXiv:2601.14852), and it is a drop-in replacement for
 # Carr-Madan-style spanning integrals (implied moments, VIX/SVIX, tail
 # probabilities).
 #
