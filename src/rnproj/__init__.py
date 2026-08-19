@@ -27,7 +27,9 @@ from typing import Any
 
 import numpy as np
 
+from .carr_madan import carr_madan, carr_madan_cdf, carr_madan_sparse
 from .chain import OptionChain
+from .distribution import DistributionFit, implied_cdf, implied_pdf
 from .grids import default_grid
 from .moments import Moments, implied_moments, svix, vix
 from .projection import BidAsk, Projection, project
@@ -47,11 +49,17 @@ __all__ = [
     "BidAsk",
     "WeightSpec",
     "Moments",
+    "DistributionFit",
     "project",
     "expectation",
     "implied_moments",
+    "implied_cdf",
+    "implied_pdf",
     "vix",
     "svix",
+    "carr_madan",
+    "carr_madan_sparse",
+    "carr_madan_cdf",
     "default_grid",
     "automatic_weights",
     "vg_weights",
