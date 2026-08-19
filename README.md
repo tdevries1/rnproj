@@ -15,12 +15,12 @@ E^Q[g(S_T)]  ≈  β₁ + β₂·F + R_f·( Σⱼ βⱼᴾ·P(Kⱼ) + Σⱼ β�
 
 where β solves an ordinary weighted least-squares problem on a state grid.
 
-**Why use it instead of hand-rolled Carr-Madan code?**
+**Why use it instead of Carr-Madan?**
 
-- **Drop-in replacement** for the standard pipeline: implied moments (BKM),
-  VIX/SVIX-style indices, variance risk premia, implied distributions.
+- **Automatically computes**: implied moments (BKM),
+  VIX/SVIX-style indices, implied distributions.
 - **Markedly more accurate with sparse or truncated strikes**, where the
-  discretized spanning integral degrades (order-of-magnitude smaller errors
+  discretized CM formula worsens (order-of-magnitude smaller errors
   in the paper's simulations). With dense strikes the two coincide.
 - Exact by construction for anything the options span (put-call parity,
   affine payoffs, observed option payoffs).
@@ -29,7 +29,7 @@ where β solves an ordinary weighted least-squares problem on a state grid.
 - Comes with a **finite-sample error bound**:
   `|E^Q g − E^Q ĝ| ≤ ‖g − ĝ‖_{L²(ω)} · √χ²(f^Q‖ω)`, whose first factor is
   computed from the data (`fit.residual_l2`).
-- **Bivariate FX dependence** (unique to this approach): risk-neutral
+- **Bivariate FX dependence**: risk-neutral
   covariance, correlation, and joint crash probabilities for a triangle of
   exchange rates, using cross-rate options via triangular parity.
 
@@ -88,7 +88,7 @@ chain = rnproj.fx.chain_from_fx_quotes(
 ## FX dependence (bivariate)
 
 For two currencies against a common numeraire plus their cross rate,
-vanilla options on all three legs identify risk-neutral dependence:
+vanilla options on all three legs estimate risk-neutral dependence:
 
 ```python
 tri = rnproj.FXTriangle(leg1=eurusd_chain, leg2=gbpusd_chain, cross=eurgbp_chain)
