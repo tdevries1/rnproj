@@ -238,7 +238,10 @@ class TestConstrainedCDF:
         # The Matlab lsqlin interior-point solver stops at slightly different
         # points than exact least squares in the flat far-left tail, which
         # changes where the monotonicity constraint binds (plateau vs. slow
-        # rise). Differences are ~2e-4 on the [0, 1] CDF scale; compare at
-        # CDF-scale tolerance.
+        # rise); the gap also varies across BLAS builds (~5e-4 observed on
+        # macOS arm64). Assert the structure (monotone, in range) and
+        # CDF-scale closeness rather than solver-noise-level agreement.
+        assert np.all(np.diff(cdf.values) >= -1e-12)
+        assert cdf.values.min() >= 0.0 and cdf.values.max() <= 1.0
         assert cdf.values[0] <= max(expected[1], 1e-3)
-        np.testing.assert_allclose(cdf.values[1:], expected[1:], rtol=1e-3, atol=5e-4)
+        np.testing.assert_allclose(cdf.values[1:], expected[1:], rtol=1e-3, atol=1.5e-3)
