@@ -221,7 +221,15 @@ class VGQuantiles:
     inverting the CDF on a fine grid (matches steps 4 of the Matlab
     reference: 5000-point fine grid, cumulative trapezoid, PCHIP inverse)."""
 
-    def __init__(self, params: VGParams, T: float, forward: float, n_fine: int = 5000):
+    def __init__(
+        self,
+        params: VGParams,
+        T: float,
+        forward: float,
+        n_fine: int = 5000,
+        *,
+        mixture: str = "quantile",
+    ):
         from scipy.interpolate import PchipInterpolator
 
         log_std = np.sqrt(params.sigma**2 * T + params.theta**2 * params.nu * T)
@@ -230,7 +238,7 @@ class VGQuantiles:
         x_min = max(1e-6, forward * np.exp(log_center - log_range))
         x_max = forward * np.exp(log_center + log_range)
         x = np.linspace(x_min, x_max, n_fine)
-        f = vg_price_density(params, T, forward, x)
+        f = vg_price_density(params, T, forward, x, mixture=mixture)
         cdf = np.concatenate([[0.0], np.cumsum((f[1:] + f[:-1]) * 0.5 * np.diff(x))])
         cdf /= cdf[-1]
         # far tails underflow to zero, leaving flat plateaus; strip them
