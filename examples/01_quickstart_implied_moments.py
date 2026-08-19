@@ -15,7 +15,7 @@
 # fitted combination is priced with the observed option prices. This is the
 # estimator of De Vries (2026), *A Projection Approach for Estimating
 # Risk-Neutral Expectations*, and it is a drop-in replacement for
-# Carr-Madan-style spanning integrals (BKM moments, VIX/SVIX, tail
+# Carr-Madan-style spanning integrals (implied moments, VIX/SVIX, tail
 # probabilities).
 #
 # This notebook uses a synthetic chain so it runs anywhere; replace the
@@ -82,7 +82,7 @@ else:
 # ## Implied moments, VIX and SVIX
 
 # %%
-m = rnproj.implied_moments(chain)  # log-return moments, BKM convention
+m = rnproj.implied_moments(chain)  # log-return moments (Bakshi-Kapadia-Madan convention)
 print(f"variance  {m.variance:.6f}   (BS truth {sigma**2 * maturity:.6f})")
 print(f"skewness  {m.skewness:+.4f}   (BS truth 0)")
 print(f"kurtosis  {m.kurtosis:.4f}   (BS truth 3)")

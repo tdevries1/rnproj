@@ -13,7 +13,7 @@ the OTM bookkeeping, or the interpolation/extrapolation layer:
 
 | You compute today | With rnproj |
 | --- | --- |
-| BKM implied variance / skew / kurtosis | `rnproj.implied_moments(chain)` |
+| Bakshi-Kapadia-Madan (2003) implied variance / skew / kurtosis | `rnproj.implied_moments(chain)` |
 | VIX-style index | `rnproj.vix(chain)` |
 | SVIX (Martin 2017) | `rnproj.svix(chain)` |
 | \(E^Q[g(S_T)]\) for any g | `rnproj.expectation(g, chain)` |

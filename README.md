@@ -51,7 +51,7 @@ chain = rnproj.OptionChain.from_arrays(
     forward=5321.4, maturity=30 / 365, rate=0.043,
 )
 
-m = rnproj.implied_moments(chain)      # BKM-style log-return moments
+m = rnproj.implied_moments(chain)      # option-implied log-return moments
 print(m.variance, m.skewness, m.kurtosis)
 print(rnproj.vix(chain), rnproj.svix(chain))
 

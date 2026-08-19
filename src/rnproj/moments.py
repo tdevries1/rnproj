@@ -82,7 +82,8 @@ def implied_moments(
         Highest moment to estimate (>= 2).
     of : {"log", "simple", "price"}
         The variable whose moments are estimated: log return
-        ``log(S_T/F)`` (default, BKM convention), simple return
+        ``log(S_T/F)`` (default, the Bakshi-Kapadia-Madan convention),
+        simple return
         ``S_T/F - 1`` (whose risk-neutral mean is exactly 0), or the raw
         price ``S_T``.
     **kwargs

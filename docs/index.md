@@ -26,7 +26,7 @@ chain = rnproj.OptionChain.from_arrays(
     forward=5321.4, maturity=30 / 365, rate=0.043,
 )
 
-m = rnproj.implied_moments(chain)          # BKM-style moments
+m = rnproj.implied_moments(chain)          # option-implied moments
 rnproj.vix(chain), rnproj.svix(chain)      # variance indices
 cdf = rnproj.implied_cdf(chain)            # implied distribution
 
