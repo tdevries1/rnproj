@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rnproj"
+version = "0.1.0"
+description = "Risk-neutral expectations from option prices by least-squares projection (De Vries, 2026)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Tjeerd de Vries", email = "de-vries@hec.fr" }]
+keywords = [
+    "options",
+    "risk-neutral",
+    "implied moments",
+    "implied distribution",
+    "Carr-Madan",
+    "VIX",
+    "finance",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov", "hypothesis>=6", "ruff", "mypy"]
+
+[project.urls]
+Repository = "https://github.com/tjeerddevries/rnproj"
+Issues = "https://github.com/tjeerddevries/rnproj/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rnproj"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "NPY", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+files = ["src"]
