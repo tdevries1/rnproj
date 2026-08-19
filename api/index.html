@@ -1,0 +1,2830 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Risk-neutral expectations from option prices by least-squares projection">
+      
+      
+      
+      
+        <link rel="prev" href="../migrating/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>API reference - rnproj</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="rnproj" class="md-header__button md-logo" aria-label="rnproj" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            rnproj
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/tdevries1/rnproj" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="rnproj" class="md-nav__button md-logo" aria-label="rnproj" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    rnproj
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/tdevries1/rnproj" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory in five minutes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../weighting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing the weighting density
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FX dependence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from Carr-Madan code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OptionChain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.gross_rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gross_rate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.strikes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strikes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.from_arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from_arrays
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.otm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        otm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection.error_bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        error_bound
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection.fitted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fitted
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection.portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        portfolio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convenience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenience
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.moments.implied_moments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_moments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.moments.vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.moments.svix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        svix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.distribution.implied_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_cdf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.distribution.implied_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_pdf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weighting-densities-and-grids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weighting densities and grids
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.automatic_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        automatic_weights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.vg_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vg_weights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.lognormal_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lognormal_weights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.weights_from_density" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        weights_from_density
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.grids.default_grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        default_grid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#carr-madan-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carr-Madan benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.carr_madan.carr_madan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carr_madan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.carr_madan.carr_madan_sparse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carr_madan_sparse
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.carr_madan.carr_madan_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carr_madan_cdf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bivariate-fx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bivariate FX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.FXTriangle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FXTriangle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.joint_projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        joint_projection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.implied_covariance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_covariance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.joint_tail_probability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        joint_tail_probability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.hoeffding_decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hoeffding_decomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fx-quote-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX quote conversion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.chain_from_fx_quotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chain_from_fx_quotes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.garman_kohlhagen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        garman_kohlhagen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.strike_from_spot_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strike_from_spot_delta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.atm_delta_neutral_strike" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        atm_delta_neutral_strike
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.smile_from_quotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        smile_from_quotes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OptionChain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.gross_rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gross_rate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.strikes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strikes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.from_arrays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        from_arrays
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.chain.OptionChain.otm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        otm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection.error_bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        error_bound
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection.fitted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fitted
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.projection.Projection.portfolio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        portfolio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convenience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenience
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.moments.implied_moments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_moments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.moments.vix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.moments.svix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        svix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.distribution.implied_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_cdf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.distribution.implied_pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_pdf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weighting-densities-and-grids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weighting densities and grids
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.automatic_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        automatic_weights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.vg_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vg_weights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.lognormal_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lognormal_weights
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.weights.weights_from_density" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        weights_from_density
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.grids.default_grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        default_grid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#carr-madan-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carr-Madan benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.carr_madan.carr_madan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carr_madan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.carr_madan.carr_madan_sparse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carr_madan_sparse
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.carr_madan.carr_madan_cdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carr_madan_cdf
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bivariate-fx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bivariate FX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.FXTriangle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FXTriangle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.joint_projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        joint_projection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.implied_covariance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        implied_covariance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.joint_tail_probability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        joint_tail_probability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.bivariate.hoeffding_decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hoeffding_decomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fx-quote-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FX quote conversion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.chain_from_fx_quotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        chain_from_fx_quotes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.garman_kohlhagen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        garman_kohlhagen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.strike_from_spot_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strike_from_spot_delta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.atm_delta_neutral_strike" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        atm_delta_neutral_strike
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rnproj.fx.smile_from_quotes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        smile_from_quotes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference">API reference</h1>
+<h2 id="core">Core</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="rnproj.chain.OptionChain"></a>
+    <div class="doc doc-contents first">
+
+
+
+        <p>European option quotes for one underlying and one maturity.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>call_strikes</code>
+            </td>
+            <td>
+                  <code><span title="array_like">array_like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Call strikes and prices (same length; may be empty).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>call_prices</code>
+            </td>
+            <td>
+                  <code><span title="array_like">array_like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Call strikes and prices (same length; may be empty).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>put_strikes</code>
+            </td>
+            <td>
+                  <code><span title="array_like">array_like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Put strikes and prices (same length; may be empty).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>put_prices</code>
+            </td>
+            <td>
+                  <code><span title="array_like">array_like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Put strikes and prices (same length; may be empty).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>forward</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forward price :math:<code>F_{t \to T}</code> of the underlying for delivery at T.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>maturity</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Time to maturity T in year fractions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>rate</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Continuously-compounded risk-free rate. Give exactly one of
+<code>rate</code> and <code>discount</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>discount</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Discount factor :math:<code>e^{-rT}</code> (equals 1 / gross risk-free rate).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>spot</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Spot price; informational only, never used in computations.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="rnproj.chain.OptionChain.gross_rate" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">gross_rate</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Gross risk-free rate :math:<code>R_{f,t\to T} = e^{rT} = 1/\text{discount}</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="rnproj.chain.OptionChain.strikes" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">strikes</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Sorted union of all put and call strikes (distinct values).</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="rnproj.chain.OptionChain.from_arrays" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">from_arrays</span><span class="p">(</span><span class="n">strikes</span><span class="p">,</span> <span class="n">calls</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">puts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">maturity</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">discount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spot</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Build a chain from one strike array with call and/or put prices.</p>
+<p><code>calls</code> and <code>puts</code> are price arrays aligned with <code>strikes</code>;
+missing quotes may be marked <code>nan</code> and are dropped per leg.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="rnproj.chain.OptionChain.otm" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">otm</span><span class="p">()</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Copy with only out-of-the-money quotes, split at the forward.</p>
+<p>Puts with :math:<code>K \le F</code> and calls with :math:<code>K &gt; F</code> are kept; all
+other quotes are dropped. Mirrors the OTM filter of the Matlab
+reference (<code>ols_projection.m</code>).</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.projection.project"></a>
+    <div class="doc doc-contents first">
+
+        <p>Estimate :math:<code>E^Q[g(S_T)]</code> by least-squares projection.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>g</code>
+            </td>
+            <td>
+                  <code><span title="callable">callable</span> or <span title="array">array</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Target payoff. A callable is evaluated on the state grid and may
+return either a vector or an <code>(n_grid, m)</code> matrix (one column per
+target; e.g. an indicator matrix prices a whole CDF in one solve).
+An array must be aligned with an explicitly supplied <code>grid</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>chain</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="rnproj.chain.OptionChain" href="#rnproj.chain.OptionChain">OptionChain</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Observed option quotes for one maturity.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>grid</code>
+            </td>
+            <td>
+                  <code><span title="array">array</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>State grid. Default: built automatically by
+:func:<code>rnproj.grids.default_grid</code>, whose mesh is finer than half the
+smallest strike gap so the design matrix keeps full column rank.
+A supplied grid is validated (hard error if it does not cover all
+strikes; warning if its mesh is too coarse).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>weights</code>
+            </td>
+            <td>
+                  <code><span title="optional">optional</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The weighting density :math:<code>\omega</code>. One of: <code>None</code> (automatic,
+see :func:<code>rnproj.weights.automatic_weights</code>), a <code>WeightSpec</code>, a
+density callable evaluated on the grid, or an array aligned with an
+explicitly supplied <code>grid</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>otm_only</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True (default), keep only OTM quotes, split at the forward. Set
+False to use every supplied quote as a basis function (the
+<code>ols_projection_sparse</code> behavior, appropriate for sparse OTC
+chains where e.g. the delta-neutral ATM strike sits above the
+forward).</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ridge</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Scale-invariant ridge strength (0 = plain WLS).</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>nonnegative</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Constrain the fitted payoff to be nonnegative in every grid state.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>bid_ask</code>
+            </td>
+            <td>
+                  <code><span title="rnproj.projection.BidAsk">BidAsk</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Conservative pricing: long legs at ask, short legs at bid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="rnproj.projection.Projection"></a>
+    <div class="doc doc-contents first">
+
+
+
+        <p>Result of :func:<code>project</code>.</p>
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><span title="rnproj.projection.Projection.value">value</span></code></td>
+            <td>
+                  <code><span title="float">float</span> or <span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The projection estimate :math:<code>\hat E^Q[g(S_T)]</code> (an array when
+<code>g</code> returned several target columns).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rnproj.projection.Projection.beta">beta</span></code></td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>WLS coefficients, ordered [constant, underlying, puts..., calls...].</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rnproj.projection.Projection.basis_prices">basis_prices</span></code></td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Risk-neutral basis expectations <code>[1, F, R_f*P..., R_f*C...]</code>.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rnproj.projection.Projection.residual_l2">residual_l2</span></code></td>
+            <td>
+                  <code><span title="float">float</span> or <span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Projection error :math:<code>\|g - \hat g\|_{L^2(\omega)}</code>, the
+data-driven half of the finite-sample bound of De Vries (2026).</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rnproj.projection.Projection.cond">cond</span></code></td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Condition number of the row-weighted design matrix.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="rnproj.projection.Projection.error_bound" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">error_bound</span><span class="p">(</span><span class="n">chi2</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Finite-sample bound :math:<code>\|g-\hat g\|_{L^2(\omega)}\sqrt{\chi^2}</code>.</p>
+<p><code>chi2</code> is the chi-squared divergence :math:<code>\chi^2(f^Q \| \omega)</code>
+between the (unknown) risk-neutral density and the weighting density;
+the bound holds for every risk-neutral measure within that divergence
+of :math:<code>\omega</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="rnproj.projection.Projection.fitted" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fitted</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The projected payoff :math:<code>\hat g</code> on <code>s</code> (default: the grid).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="rnproj.projection.Projection.portfolio" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">portfolio</span><span class="p">()</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The replicating portfolio: one row per instrument with its weight.</p>
+<p>Returns a :class:<code>pandas.DataFrame</code> when pandas is installed, else a
+dict of arrays.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="convenience">Convenience</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.moments.implied_moments"></a>
+    <div class="doc doc-contents first">
+
+        <p>Estimate option-implied moments up to <code>orders</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>orders</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Highest moment to estimate (&gt;= 2).</p>
+              </div>
+            </td>
+            <td>
+                  <code>4</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>of</code>
+            </td>
+            <td>
+                  <code>(&#39;log&#39;, &#39;simple&#39;, &#39;price&#39;)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The variable whose moments are estimated: log return
+<code>log(S_T/F)</code> (default, the Bakshi-Kapadia-Madan convention),
+simple return
+<code>S_T/F - 1</code> (whose risk-neutral mean is exactly 0), or the raw
+price <code>S_T</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;log&#34;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Passed to :func:<code>rnproj.project</code> (<code>weights</code>, <code>grid</code>,
+<code>otm_only</code>, ...).</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.moments.vix"></a>
+    <div class="doc doc-contents first">
+
+        <p>The VIX-style annualized volatility (decimal units).</p>
+<p><code>vix**2 = (2/T) * E^Q[log(F/S_T)]</code>, the risk-neutral entropy measure
+underlying the CBOE VIX; the index itself quotes <code>100 * vix</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.moments.svix"></a>
+    <div class="doc doc-contents first">
+
+        <p>Martin's (2017) SVIX annualized volatility (decimal units).</p>
+<p><code>svix**2 = (1/T) * (E^Q[(S_T/F)^2] - 1)</code>, the annualized risk-neutral
+variance of the simple return.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.distribution.implied_cdf"></a>
+    <div class="doc doc-contents first">
+
+        <p>Estimate the risk-neutral CDF of :math:<code>S_T</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>x</code>
+            </td>
+            <td>
+                  <code><span title="array">array</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Evaluation points. Default: <code>n_points</code> evenly spaced points across
+the automatic state grid.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>monotone</code>
+            </td>
+            <td>
+                  <code>(&#39;rearrange&#39;, &#39;constrained&#39;, None)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"rearrange"</code> (default): sort the raw estimates (Chernozhukov,
+Fernandez-Val &amp; Galichon rearrangement) and clip to [0, 1] --
+dependency-free and the recommended choice.
+<code>"constrained"</code>: re-solve each point sequentially with the
+constraint <code>cdf(x_{i-1}) &lt;= cdf(x_i) &lt;= 1</code> imposed on the
+estimate (port of <code>ols_pricing_cdf_discrete.m</code>); slower.
+<code>None</code>: raw projection estimates.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#34;rearrange&#34;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Passed to :func:<code>rnproj.project</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.distribution.implied_pdf"></a>
+    <div class="doc doc-contents first">
+
+        <p>Closed-form risk-neutral density :math:<code>\hat f^Q</code> of :math:<code>S_T</code>.</p>
+<p>Evaluates :math:<code>E_X' M^{-1} \varphi(x) \omega(x)</code> with the weighted
+Gram matrix :math:<code>M</code> computed by trapezoid quadrature on the state
+grid. Requires the weighting density to be evaluable at <code>x</code>; the
+automatic (VG/lognormal) weights always are.</p>
+
+
+    </div>
+
+</div><h2 id="weighting-densities-and-grids">Weighting densities and grids</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.weights.automatic_weights"></a>
+    <div class="doc doc-contents first">
+
+        <p>The package-default weighting density for a chain.</p>
+<p>The smile-calibrated Variance-Gamma density of :func:<code>vg_weights</code>, with
+its built-in lognormal fallback on degeneracy.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.weights.vg_weights"></a>
+    <div class="doc doc-contents first">
+
+        <p>Variance-Gamma weighting density calibrated to the observed smile.</p>
+<p>Port of <code>vg_estimate_from_options.m</code>: OTM quotes (puts converted to
+synthetic calls by put-call parity) are fitted by pricing MSE over the
+VG parameters <code>(sigma, nu, theta)</code> with the martingale compensator
+enforcing :math:<code>E^Q[S_T] = F</code>. Falls back to the variance-matched
+lognormal of :func:<code>lognormal_weights</code> when</p>
+<ul>
+<li>fewer than 4 OTM quotes are available,</li>
+<li>the calibration fails or pins <code>sigma</code>/<code>nu</code> at its lower bound, or</li>
+<li><code>T / nu &lt; 1/2</code>, where the VG density develops an integrable
+  singularity at the mode (a near-delta weight that breaks WLS in
+  low-volatility regimes).</li>
+</ul>
+<p>The returned spec's <code>params['fallback']</code> records which branch was used.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.weights.lognormal_weights"></a>
+    <div class="doc doc-contents first">
+
+        <p>Lognormal weighting density with mean equal to the forward.</p>
+<p><code>S_T</code> is lognormal with :math:<code>E[S_T] = F</code> and volatility <code>sigma</code>
+(annualized). When <code>sigma</code> is omitted it is implied from the option
+prices themselves: a preliminary projection with uniform weights
+estimates :math:<code>\mathrm{Var}^Q(S_T)</code>, and
+:math:<code>\sigma_{eq} = \sqrt{\log(1 + \mathrm{Var}/F^2)/T}</code> (the
+equivalent-lognormal volatility used by the Matlab reference).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.weights.weights_from_density"></a>
+    <div class="doc doc-contents first">
+
+        <p>Wrap a user-supplied density function as a :class:<code>WeightSpec</code>.</p>
+<p><code>chain_or_strikes</code> (an :class:<code>OptionChain</code> or a strike array) supplies
+the strikes for automatic grid construction when <code>grid</code> is omitted.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.grids.default_grid"></a>
+    <div class="doc doc-contents first">
+
+        <p>Build a uniform state grid for the projection estimator.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>strikes</code>
+            </td>
+            <td>
+                  <code><span title="array_like">array_like</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>All observed strikes (puts and calls together).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>distribution</code>
+            </td>
+            <td>
+                  <code>object with ``.ppf``</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A distribution for the underlying (e.g. the weighting density). When
+given, the grid endpoints are pushed out to its <code>alpha</code> and
+<code>1 - alpha</code> quantiles if those lie beyond the padded strike range.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>alpha</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tail mass left outside the grid on each side when <code>distribution</code>
+is given.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.001</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>strike_padding</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Relative padding beyond the outermost strikes (default 5%).</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.05</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_min</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Minimum number of grid points.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1000</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>safety_factor</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The mesh is at most <code>min(diff(strikes)) / safety_factor</code>, so with
+the default there are at least two grid points between any pair of
+consecutive strikes.</p>
+              </div>
+            </td>
+            <td>
+                  <code>2.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Uniform, strictly increasing grid covering all strikes.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div><h2 id="carr-madan-benchmark">Carr-Madan benchmark</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.carr_madan.carr_madan"></a>
+    <div class="doc doc-contents first">
+
+        <p>Carr-Madan estimate of :math:<code>E^Q[g(S_T)]</code> from OTM quotes.</p>
+<p><code>d2g</code> is the second derivative :math:<code>g''</code>. Returns <code>nan</code> when
+neither wing has at least two OTM strikes; falls back to a single wing
+when only one does (as in the Matlab reference).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.carr_madan.carr_madan_sparse"></a>
+    <div class="doc doc-contents first">
+
+        <p>Sparse-chain Carr-Madan: parity-convert ITM quotes, Riemann sum.</p>
+<p>Instead of discarding in-the-money quotes, converts them to the OTM side
+by put-call parity (building a full put curve below the forward and a
+full call curve above), then integrates with a central-difference
+Riemann sum. Port of <code>carr_madan_pricing_sparse.m</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.carr_madan.carr_madan_cdf"></a>
+    <div class="doc doc-contents first">
+
+        <p>Risk-neutral CDF on <code>x</code> from finite-difference option-price slopes.</p>
+<p><code>F(K) = R_f dP/dK</code> on the OTM put wing and <code>F(K) = 1 + R_f dC/dK</code>
+on the OTM call wing, linearly interpolated onto <code>x</code> and anchored at
+<code>(min(x), 0)</code> and <code>(max(x), 1)</code>. Returns all-<code>nan</code> when either
+wing has fewer than two strikes. Port of <code>carr_madan_cdf.m</code>.</p>
+
+
+    </div>
+
+</div><h2 id="bivariate-fx">Bivariate FX</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="rnproj.bivariate.FXTriangle"></a>
+    <div class="doc doc-contents first">
+
+
+
+        <p>A triangle of option chains: two legs against a common numeraire
+currency plus the cross rate.</p>
+<p><code>leg1</code> and <code>leg2</code> are quoted in the numeraire currency (e.g.
+EURUSD and GBPUSD, both in USD); <code>cross</code> is the <code>S1/S2</code> rate quoted
+in leg-2 currency (e.g. EURGBP in GBP), with its own discount/rate. The
+numeraire adjustment for the cross-rate legs is handled internally.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.bivariate.joint_projection"></a>
+    <div class="doc doc-contents first">
+
+        <p>Project a joint payoff <code>g(s1, s2)</code> onto the triangle's option basis.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>g</code>
+            </td>
+            <td>
+                  <code><span title="callable">callable</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Joint target payoff, evaluated elementwise on the flattened tensor
+grid; may return an <code>(n, m)</code> matrix for several targets at once.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>grids</code>
+            </td>
+            <td>
+                  <code>(<span title="array">array</span>, <span title="array">array</span>)</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Marginal state grids; default per the reference rule
+<code>linspace(0.95 Kmin, 1.02 Kmax, n_grid)</code> per leg (with the
+resolution rule as a floor).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>weights</code>
+            </td>
+            <td>
+                  <code><span title="optional">optional</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>None</code> (uniform, the reference default), a pair of marginal
+weight arrays (product density), or a callable <code>w(s1, s2)</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.bivariate.implied_covariance"></a>
+    <div class="doc doc-contents first">
+
+        <p>Risk-neutral covariance and correlation of <code>(S1, S2)</code>.</p>
+<p>Projects :math:<code>(s_1 - F_1)(s_2 - F_2)</code> onto the joint basis; marginal
+variances come from univariate projections on each leg (uniform
+weights, no OTM filter, per the reference implementation).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.bivariate.joint_tail_probability"></a>
+    <div class="doc doc-contents first">
+
+        <p>Joint crash probability :math:<code>Q(S_1/F_1 \le a_1, S_2/F_2 \le a_2)</code>.</p>
+<p><code>independent</code> is the product of the marginal probabilities (the
+no-dependence benchmark); the gap between <code>joint</code> and <code>independent</code>
+is the dependence channel. <code>conditional</code> is joint / marginal2.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.bivariate.hoeffding_decomposition"></a>
+    <div class="doc doc-contents first">
+
+        <p>Localize the risk-neutral covariance across the joint distribution.</p>
+<p>Hoeffding's identity writes the covariance of the <em>returns</em> as
+:math:<code>\iint (F_{12}(x, y) - F_1(x) F_2(y))\,dx\,dy</code>; evaluating the
+integrand cellwise (2-D trapezoid) shows which region of the joint
+distribution drives dependence. Edges are in return units
+(:math:<code>S_i/F_i</code>); default: <code>n_edges</code> points spanning each grid.
+Port of <code>hoeffdingCovCells.m</code>.</p>
+
+
+    </div>
+
+</div><h2 id="fx-quote-conversion">FX quote conversion</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.fx.chain_from_fx_quotes"></a>
+    <div class="doc doc-contents first">
+
+        <p>Build the standard five-strike OTC chain from Bloomberg-style quotes.</p>
+<p>Strikes: 10-delta put, 25-delta put, delta-neutral ATM (entered as a
+put, matching the Matlab reference), 25-delta call, 10-delta call. All
+vols in decimals; <code>domestic_df</code> prices the options and sets the
+chain's discount, <code>foreign_df</code> drives the spot-delta convention.</p>
+<p>Project chains built this way with <code>otm_only=False</code>: the ATM strike
+lies above the forward and an OTM filter would discard it.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.fx.garman_kohlhagen"></a>
+    <div class="doc doc-contents first">
+
+        <p>Garman-Kohlhagen option price in forward form.</p>
+<p><code>domestic_df</code> is the domestic discount factor (the price currency's).
+All inputs broadcast elementwise.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.fx.strike_from_spot_delta"></a>
+    <div class="doc doc-contents first">
+
+        <p>Strike for a given <em>spot delta</em> magnitude (e.g. 0.10, 0.25).</p>
+<p>FX spot-delta conventions: call :math:<code>\Delta_S = D_f N(d_1)</code>, put
+:math:<code>\Delta_S = -D_f N(-d_1)</code> with <code>foreign_df</code> the foreign
+discount factor; converted to forward delta and inverted for K.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.fx.atm_delta_neutral_strike"></a>
+    <div class="doc doc-contents first">
+
+        <p>The delta-neutral ATM strike :math:<code>K = F e^{\sigma^2 T / 2}</code>.</p>
+<p>Note this sits <em>above</em> the forward, which is why sparse FX chains should
+be projected with <code>otm_only=False</code>.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="rnproj.fx.smile_from_quotes"></a>
+    <div class="doc doc-contents first">
+
+        <p>Call and put vols at one delta from (ATM, risk-reversal, butterfly).</p>
+<p><code>sigma_call = atm + (bf + rr)/2</code> and <code>sigma_put = atm + (bf - rr)/2</code>
+(the convention of the Matlab reference). All inputs in decimal vols.</p>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
