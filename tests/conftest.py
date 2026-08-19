@@ -37,9 +37,36 @@ def make_bs_chain(
     )
 
 
+def make_vg_chain(
+    sigma=0.18,
+    nu=0.4,
+    theta=-0.12,
+    forward=100.0,
+    maturity=0.25,
+    rate=0.02,
+    strikes=None,
+):
+    """A chain priced under a Variance-Gamma model (calls via FFT, puts via parity)."""
+    from rnproj._vg import VGParams, vg_call_prices
+
+    if strikes is None:
+        strikes = np.linspace(70.0, 140.0, 15)
+    strikes = np.asarray(strikes, dtype=float)
+    calls = vg_call_prices(VGParams(sigma, nu, theta), strikes, rate, maturity, forward)
+    puts = calls - (forward - strikes) * np.exp(-rate * maturity)
+    return OptionChain.from_arrays(
+        strikes, calls=calls, puts=puts, forward=forward, maturity=maturity, rate=rate
+    )
+
+
 @pytest.fixture
 def bs_chain():
     return make_bs_chain()
+
+
+@pytest.fixture
+def vg_chain():
+    return make_vg_chain()
 
 
 @pytest.fixture

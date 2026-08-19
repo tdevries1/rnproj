@@ -81,7 +81,7 @@ def default_grid(
     if distribution is not None:
         lo = min(lo, float(distribution.ppf(alpha)))
         hi = max(hi, float(distribution.ppf(1.0 - alpha)))
-    lo = max(lo, 1e-12)
+    lo = max(lo, 1e-6)  # same floor as the Matlab reference
 
     # Resolution rule: mesh finer than the smallest strike gap.
     if strikes.size > 1:

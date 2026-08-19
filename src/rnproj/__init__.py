@@ -29,8 +29,15 @@ import numpy as np
 
 from .chain import OptionChain
 from .grids import default_grid
+from .moments import Moments, implied_moments, svix, vix
 from .projection import BidAsk, Projection, project
-from .weights import WeightSpec, automatic_weights, lognormal_weights, weights_from_density
+from .weights import (
+    WeightSpec,
+    automatic_weights,
+    lognormal_weights,
+    vg_weights,
+    weights_from_density,
+)
 
 __version__ = "0.1.0"
 
@@ -39,10 +46,15 @@ __all__ = [
     "Projection",
     "BidAsk",
     "WeightSpec",
+    "Moments",
     "project",
     "expectation",
+    "implied_moments",
+    "vix",
+    "svix",
     "default_grid",
     "automatic_weights",
+    "vg_weights",
     "lognormal_weights",
     "weights_from_density",
     "__version__",
