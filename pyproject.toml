@@ -39,8 +39,8 @@ dependencies = ["numpy>=1.24", "scipy>=1.10"]
 dev = ["pytest>=7", "pytest-cov", "hypothesis>=6", "ruff", "mypy"]
 
 [project.urls]
-Repository = "https://github.com/tjeerddevries/rnproj"
-Issues = "https://github.com/tjeerddevries/rnproj/issues"
+Repository = "https://github.com/tdevries1/rnproj"
+Issues = "https://github.com/tdevries1/rnproj/issues"
 Paper = "https://arxiv.org/abs/2601.14852"
 
 [tool.hatch.build.targets.wheel]

@@ -1,6 +1,6 @@
 site_name: rnproj
 site_description: Risk-neutral expectations from option prices by least-squares projection
-repo_url: https://github.com/tjeerddevries/rnproj
+repo_url: https://github.com/tdevries1/rnproj
 theme:
   name: material
   palette:
