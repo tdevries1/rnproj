@@ -27,6 +27,18 @@ from typing import Any
 
 import numpy as np
 
+from . import fx
+from .bivariate import (
+    CovarianceResult,
+    FXTriangle,
+    HoeffdingResult,
+    JointProjection,
+    TailResult,
+    hoeffding_decomposition,
+    implied_covariance,
+    joint_projection,
+    joint_tail_probability,
+)
 from .carr_madan import carr_madan, carr_madan_cdf, carr_madan_sparse
 from .chain import OptionChain
 from .distribution import DistributionFit, implied_cdf, implied_pdf
@@ -60,6 +72,16 @@ __all__ = [
     "carr_madan",
     "carr_madan_sparse",
     "carr_madan_cdf",
+    "FXTriangle",
+    "JointProjection",
+    "CovarianceResult",
+    "TailResult",
+    "HoeffdingResult",
+    "joint_projection",
+    "implied_covariance",
+    "joint_tail_probability",
+    "hoeffding_decomposition",
+    "fx",
     "default_grid",
     "automatic_weights",
     "vg_weights",

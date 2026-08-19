@@ -27,6 +27,8 @@ case_bs_sparse(out_dir, meta);
 case_vg_fixed_params(out_dir, meta);
 case_carr_madan(out_dir, meta);
 case_cdf_constrained(out_dir, meta);
+case_fx_quotes(out_dir, meta);
+case_fx_bivariate(out_dir, meta);
 
 fprintf('All golden files written to %s\n', out_dir);
 end
@@ -210,6 +212,152 @@ j.obj_open('outputs');
 j.outv('cdf', cdf(:), 1e-6);
 j.obj_close();
 j.close();
+end
+
+
+function case_fx_quotes(out_dir, meta)
+% (ATM, RR, BF) quotes -> strikes and GK prices. Formulas transcribed from
+% fx_make_prices.m local functions (they are private subfunctions there).
+atm = 0.10; rr25 = -0.015; bf25 = 0.003; rr10 = -0.025; bf10 = 0.008;
+F = 1.10; T = 1/12; Dd = 0.998; Df = 0.997;
+
+C25 = atm + 0.5*(bf25 + rr25);  P25 = atm + 0.5*(bf25 - rr25);
+C10 = atm + 0.5*(bf10 + rr10);  P10 = atm + 0.5*(bf10 - rr10);
+
+K_ATM = F * exp(0.5 * atm^2 * T);
+K_C25 = strike_from_spot_delta_(0.25, true,  F, C25, T, Df);
+K_P25 = strike_from_spot_delta_(0.25, false, F, P25, T, Df);
+K_C10 = strike_from_spot_delta_(0.10, true,  F, C10, T, Df);
+K_P10 = strike_from_spot_delta_(0.10, false, F, P10, T, Df);
+
+price_ATM_put = gk_put_(F, K_ATM, atm, T, Dd);
+price_P25     = gk_put_(F, K_P25, P25, T, Dd);
+price_P10     = gk_put_(F, K_P10, P10, T, Dd);
+price_C25     = gk_call_(F, K_C25, C25, T, Dd);
+price_C10     = gk_call_(F, K_C10, C10, T, Dd);
+
+j = json_writer(fullfile(out_dir, 'fx_quotes.json'));
+j.head('fx_quotes', meta);
+j.obj_open('inputs');
+j.num('atm', atm);  j.num('rr25', rr25);  j.num('bf25', bf25);
+j.num('rr10', rr10);  j.num('bf10', bf10);
+j.num('forward', F);  j.num('maturity', T);
+j.num('domestic_df', Dd);  j.num('foreign_df', Df);
+j.obj_close();
+j.obj_open('outputs');
+j.outv('put_strikes',  [K_P10; K_P25; K_ATM], 1e-12);
+j.outv('call_strikes', [K_C25; K_C10], 1e-12);
+j.outv('put_prices',   [price_P10; price_P25; price_ATM_put], 1e-12);
+j.outv('call_prices',  [price_C25; price_C10], 1e-12);
+j.obj_close();
+j.close();
+end
+
+
+function case_fx_bivariate(out_dir, meta)
+% Synthetic FX triangle under a joint-lognormal Q with rho = 0.6, priced
+% analytically (Black legs + Margrabe cross), run through the reference
+% joint-projection code path of cm_simulation8.m (basis, stacked prices,
+% covariance, tail, marginals, Hoeffding cells).
+rho = 0.6; F1 = 1.10; F2 = 1.30; sig1 = 0.10; sig2 = 0.08; T = 1/12;
+n_grid = 150; a1 = 0.97; a2 = 0.97;
+
+z = [-1.6; -0.8; 0; 0.8; 1.6];
+K1 = F1 * exp(z * sig1 * sqrt(T));
+K2 = F2 * exp(z * sig2 * sqrt(T));
+[C1, P1] = black_prices(F1, K1, T, 0, sig1);
+[C2, P2] = black_prices(F2, K2, T, 0, sig2);
+
+f3 = F1 / F2;
+sx = sqrt(sig1^2 + sig2^2 - 2*rho*sig1*sig2);
+K3 = f3 * exp(z * max(sx, 0.02) * sqrt(T));
+srt = sx * sqrt(T);
+d1 = (log(F1 ./ (K3 * F2)) + 0.5 * srt^2) / srt;
+C3 = (F1 * normcdf(d1) - K3 * F2 .* normcdf(d1 - srt)) / F2;  % Rf3 = 1
+P3 = C3 - (F1 - K3 * F2) / F2;                                % parity
+
+% puts = lower 3 strikes, calls = upper 2 (as in the OTC 5-strike layout)
+Kp1 = K1(1:3); Kc1 = K1(4:5);  Pp1 = P1(1:3); Cc1 = C1(4:5);
+Kp2 = K2(1:3); Kc2 = K2(4:5);  Pp2 = P2(1:3); Cc2 = C2(4:5);
+Kp3 = K3(1:3); Kc3 = K3(4:5);  Pp3 = P3(1:3); Cc3 = C3(4:5);
+
+x1 = linspace(0.95*min(K1), 1.02*max(K1), n_grid)';
+x2 = linspace(0.95*min(K2), 1.02*max(K2), n_grid)';
+[x1_ten, x2_ten] = meshgrid(x1, x2);
+x1_ten = x1_ten(:);  x2_ten = x2_ten(:);
+
+% reference basis and stacked prices (r = 0, all gross rates 1)
+Phi = [ones(size(x1_ten)), x1_ten, max(Kp1' - x1_ten, 0), max(x1_ten - Kc1', 0), ...
+       x2_ten, max(Kp2' - x2_ten, 0), max(x2_ten - Kc2', 0), ...
+       x2_ten .* max(Kp3' - x1_ten ./ x2_ten, 0), ...
+       x2_ten .* max(x1_ten ./ x2_ten - Kc3', 0)];
+prices_stacked = [1; F1; Pp1; Cc1; F2; Pp2; Cc2; F2 * [Pp3; Cc3]];
+
+target  = (x1_ten - F1) .* (x2_ten - F2);
+cov_hat = (Phi \ target)' * prices_stacked;
+
+phi_marginal = @(x, Kp, Kc) [ones(numel(x),1), x, max(Kp' - x, 0), max(x - Kc', 0)];
+var1 = (phi_marginal(x1, Kp1, Kc1) \ (x1 - F1).^2)' * [1; F1; Pp1; Cc1];
+var2 = (phi_marginal(x2, Kp2, Kc2) \ (x2 - F2).^2)' * [1; F2; Pp2; Cc2];
+corr_hat = cov_hat / sqrt(var1 * var2);
+
+target_tail_fun = @(u1,u2,Fa,Fb,aa,bb) double((u1./Fa <= aa) & (u2./Fb <= bb));
+tail_risk = (Phi \ target_tail_fun(x1_ten, x2_ten, F1, F2, a1, a2))' * prices_stacked;
+
+beta_hat_marg = @(x, Kp, Kc, f, a) phi_marginal(x, Kp, Kc) \ (x./f <= a);
+marg1 = beta_hat_marg(x1, Kp1, Kc1, F1, a1)' * [1; F1; Pp1; Cc1];
+marg2 = beta_hat_marg(x2, Kp2, Kc2, F2, a2)' * [1; F2; Pp2; Cc2];
+
+x1_coarse = linspace(min(x1), max(x1), 4)' / F1;
+x2_coarse = linspace(min(x2), max(x2), 4)' / F2;
+hoef = hoeffdingCovCells(x1_coarse, x2_coarse, x1, x2, x1_ten, x2_ten, Phi, ...
+                         [F1; Pp1; Cc1], [F2; Pp2; Cc2], F2 * [Pp3; Cc3], ...
+                         F1, F2, Kp1, Kc1, Kp2, Kc2, ...
+                         target_tail_fun, beta_hat_marg);
+
+j = json_writer(fullfile(out_dir, 'fx_bivariate.json'));
+j.head('fx_bivariate', meta);
+j.obj_open('inputs');
+j.num('rho', rho);  j.num('F1', F1);  j.num('F2', F2);
+j.num('sigma1', sig1);  j.num('sigma2', sig2);  j.num('maturity', T);
+j.num('n_grid', n_grid);  j.num('a1', a1);  j.num('a2', a2);
+j.vec('K1', K1);  j.vec('C1', C1);  j.vec('P1', P1);
+j.vec('K2', K2);  j.vec('C2', C2);  j.vec('P2', P2);
+j.vec('K3', K3);  j.vec('C3', C3);  j.vec('P3', P3);
+j.obj_close();
+j.obj_open('outputs');
+j.out('cov_hat', cov_hat, 1e-8);
+j.out('corr_hat', corr_hat, 1e-8);
+j.out('var1', var1, 1e-8);
+j.out('var2', var2, 1e-8);
+j.out('tail_risk', tail_risk, 1e-6);
+j.out('marginal1', marg1, 1e-8);
+j.out('marginal2', marg2, 1e-8);
+j.out('hoeffding_total', hoef.Ctotal, 1e-6);
+j.outv('hoeffding_cells', hoef.Ccell(:), 1e-6);
+j.obj_close();
+j.close();
+end
+
+
+function c = gk_call_(F, K, sigma, T, Dd)
+d1 = (log(F./K) + 0.5*(sigma.^2).*T) ./ (sigma.*sqrt(T));
+c  = Dd .* (F.*normcdf(d1) - K.*normcdf(d1 - sigma.*sqrt(T)));
+end
+
+function p = gk_put_(F, K, sigma, T, Dd)
+d1 = (log(F./K) + 0.5*(sigma.^2).*T) ./ (sigma.*sqrt(T));
+p  = Dd .* (K.*normcdf(-(d1 - sigma.*sqrt(T))) - F.*normcdf(-d1));
+end
+
+function K = strike_from_spot_delta_(deltaAbs, isCall, F, sigma, T, Df)
+if isCall
+    DeltaF = min(max(deltaAbs ./ Df, 1e-6), 1-1e-6);
+else
+    DeltaF = min(max(1 - (deltaAbs ./ Df), 1e-6), 1-1e-6);
+end
+d1 = norminv(DeltaF);
+K  = F .* exp(-sigma.*sqrt(T).*d1 + 0.5*(sigma.^2).*T);
 end
 
 

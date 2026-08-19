@@ -145,6 +145,79 @@ class TestCarrMadan:
         check("cm_cdf", carr_madan_cdf(chain, x_cdf), out["cm_cdf"])
 
 
+class TestFXQuotes:
+    def test_strikes_and_prices(self):
+        from rnproj.fx import chain_from_fx_quotes
+
+        gold = load("fx_quotes")
+        inp, out = gold["inputs"], gold["outputs"]
+        chain = chain_from_fx_quotes(
+            atm=inp["atm"], rr25=inp["rr25"], bf25=inp["bf25"],
+            rr10=inp["rr10"], bf10=inp["bf10"],
+            forward=inp["forward"], maturity=inp["maturity"],
+            domestic_df=inp["domestic_df"], foreign_df=inp["foreign_df"],
+        )
+        check("put_strikes", chain.put_strikes, out["put_strikes"])
+        check("call_strikes", chain.call_strikes, out["call_strikes"])
+        check("put_prices", chain.put_prices, out["put_prices"])
+        check("call_prices", chain.call_prices, out["call_prices"])
+
+
+class TestFXBivariate:
+    def make_triangle_and_grids(self, inp):
+        from rnproj import FXTriangle
+
+        def chain(K, C, P, forward):
+            K, C, P = (np.asarray(a) for a in (K, C, P))
+            return OptionChain(
+                put_strikes=K[:3], put_prices=P[:3],
+                call_strikes=K[3:], call_prices=C[3:],
+                forward=forward, maturity=inp["maturity"], rate=0.0,
+            )
+
+        tri = FXTriangle(
+            leg1=chain(inp["K1"], inp["C1"], inp["P1"], inp["F1"]),
+            leg2=chain(inp["K2"], inp["C2"], inp["P2"], inp["F2"]),
+            cross=chain(inp["K3"], inp["C3"], inp["P3"], inp["F1"] / inp["F2"]),
+        )
+        n = int(inp["n_grid"])
+        K1, K2 = np.asarray(inp["K1"]), np.asarray(inp["K2"])
+        grids = (
+            np.linspace(0.95 * K1.min(), 1.02 * K1.max(), n),
+            np.linspace(0.95 * K2.min(), 1.02 * K2.max(), n),
+        )
+        return tri, grids
+
+    def test_covariance_and_tail(self):
+        from rnproj import implied_covariance, joint_tail_probability
+
+        gold = load("fx_bivariate")
+        inp, out = gold["inputs"], gold["outputs"]
+        tri, grids = self.make_triangle_and_grids(inp)
+
+        cov = implied_covariance(tri, grids=grids)
+        check("cov_hat", cov.covariance, out["cov_hat"])
+        check("corr_hat", cov.correlation, out["corr_hat"])
+        check("var1", cov.variance1, out["var1"])
+        check("var2", cov.variance2, out["var2"])
+
+        tail = joint_tail_probability(tri, inp["a1"], inp["a2"], grids=grids)
+        check("tail_risk", tail.joint, out["tail_risk"])
+        check("marginal1", tail.marginal1, out["marginal1"])
+        check("marginal2", tail.marginal2, out["marginal2"])
+
+    def test_hoeffding_cells(self):
+        from rnproj import hoeffding_decomposition
+
+        gold = load("fx_bivariate")
+        inp, out = gold["inputs"], gold["outputs"]
+        tri, grids = self.make_triangle_and_grids(inp)
+        res = hoeffding_decomposition(tri, n_edges=4, grids=grids)
+        check("hoeffding_total", res.total, out["hoeffding_total"])
+        # Matlab flattens column-major
+        check("hoeffding_cells", res.cells.flatten(order="F"), out["hoeffding_cells"])
+
+
 class TestConstrainedCDF:
     def test_sequential_constrained(self):
         gold = load("cdf_constrained")
